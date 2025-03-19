@@ -2,14 +2,42 @@ import pandas as pd
 import json
 
 # Read the data in xlsx file
-df = pd.read_excel('excel.xlsx')
+df = pd.read_csv('excel.csv')
 
 # Select just the columns that we need
 campos_deseados = ['CATEGORÍA', 'SUBCATEGORIA', 'PRODUCTO', 'TEXTO ARGUMENTOS DE VALOR', 'CARACTERISTICAS']
 df_filtrado = df[campos_deseados]
 
+# Lista de subcategorías que pertenecen a MUEVETIERRAS
+subcategorias_muevetierras = [
+    'MINI CARGADORES RUEDAS',
+    'MINI CARGADORES ORUGAS',
+    'RETROEXCAVADORAS',
+    'EXCAVADORAS',
+    'BULLDOZER',
+    'CARGADORES FRONTALES',
+    'MOTONIVELADORAS',
+    'ARTICULADOS'
+]
+
+# Lista de subcategorías que pertenecen a AGRICOLA
+subcategorias_agricola = [
+    'TRACTORES',
+    'FORRAJEROS',
+    'ASPERSORAS',
+    'GATORS',
+    'JARDINEROS',
+    'SEMBRADORAS',
+    'LABRANZA',
+    'MANEJO DE MATERIAL'
+]
+
+# Asignar categorías donde corresponda
+df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_muevetierras), 'CATEGORÍA'] = 'MUEVETIERRAS'
+df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_agricola), 'CATEGORÍA'] = 'AGRICOLA'
+
 # Convert to json
-json_data =df_filtrado.to_json(orient='records', force_ascii=False)
+json_data = df_filtrado.to_json(orient='records', force_ascii=False)
 json_formatted = json.loads(json_data)
 json_pretty = json.dumps(json_formatted, indent=4, ensure_ascii=False)
 
