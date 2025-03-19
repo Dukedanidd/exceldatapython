@@ -20,6 +20,15 @@ subcategorias_muevetierras = [
     'ARTICULADOS'
 ]
 
+# Lista de subcategorías que pertenecen a MINERIA Y AGREGADOS
+subcategorias_mineria = [
+    'BULL DOZER',
+    'ARTICULADOS',
+    'CARGADORES FRONTALES',
+    'MARTILLOS',
+    'PERFORADORAS'
+]
+
 # Lista de subcategorías que pertenecen a AGRICOLA
 subcategorias_agricola = [
     'TRACTORES',
@@ -54,6 +63,7 @@ df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_muevetierras), 'C
 df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_agricola), 'CATEGORÍA'] = 'AGRICOLA'
 df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_pavimentacion), 'CATEGORÍA'] = 'PAVIMENTACION'
 df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_plantas_asfalto), 'CATEGORÍA'] = 'PLANTAS DE ASFALTO'
+df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_mineria), 'CATEGORÍA'] = 'MINERIA Y AGREGADOS'
 
 # Convert to json
 json_data = df_filtrado.to_json(orient='records', force_ascii=False)
