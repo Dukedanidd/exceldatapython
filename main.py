@@ -1,5 +1,7 @@
 import pandas as pd
 import json
+import os
+import re
 
 # Read the data in xlsx file
 df = pd.read_csv('excel.csv')
@@ -117,6 +119,64 @@ df_filtrado['SUBCATEGORIA'] = df_filtrado['SUBCATEGORIA_NORMALIZADA']
 
 # Eliminar la columna temporal de normalización
 df_filtrado = df_filtrado.drop(columns=['SUBCATEGORIA_NORMALIZADA'])
+
+# Función para encontrar las imágenes de cualquier producto
+def encontrar_imagenes_producto(row):
+    imagenes = []
+    producto = str(row['PRODUCTO'])
+    subcategoria = str(row['SUBCATEGORIA'])
+    
+    # Extraer todos los códigos numéricos del producto
+    codigos = re.findall(r'\b\d+\b', producto)
+    if not codigos:
+        return imagenes
+    
+    # Directorio base de productos
+    base_dir = 'PRODUCTOS'
+    
+    # 1. Primero, buscar en una carpeta específica para la subcategoría
+    if os.path.exists(os.path.join(base_dir, subcategoria)):
+        subcategoria_dir = os.path.join(base_dir, subcategoria)
+        # Buscar carpetas que coincidan con cualquiera de los códigos extraídos
+        for codigo in codigos:
+            for item in os.listdir(subcategoria_dir):
+                item_path = os.path.join(subcategoria_dir, item)
+                # Si el código está en el nombre de la carpeta o archivo
+                if codigo in item and os.path.isdir(item_path):
+                    # Es una carpeta, buscar imágenes dentro
+                    for file in os.listdir(item_path):
+                        if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                            imagen_path = os.path.join(item_path, file).replace('\\', '/')
+                            imagenes.append(imagen_path)
+                elif codigo in item and item.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                    # Es una imagen directamente
+                    imagen_path = item_path.replace('\\', '/')
+                    imagenes.append(imagen_path)
+    
+    # 2. Si no se encontró nada, buscar en todo el directorio de productos
+    if not imagenes:
+        for root, dirs, files in os.walk(base_dir):
+            for codigo in codigos:
+                # Buscar directorios que coincidan con el código
+                for dir_name in dirs:
+                    if codigo in dir_name:
+                        dir_path = os.path.join(root, dir_name)
+                        # Buscar imágenes en ese directorio
+                        for file in os.listdir(dir_path):
+                            if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                                imagen_path = os.path.join(dir_path, file).replace('\\', '/')
+                                imagenes.append(imagen_path)
+                
+                # También buscar archivos de imagen que coincidan con el código
+                for file in files:
+                    if codigo in file and file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                        imagen_path = os.path.join(root, file).replace('\\', '/')
+                        imagenes.append(imagen_path)
+    
+    return imagenes
+
+# Agregar imágenes a cada producto
+df_filtrado['IMAGENES'] = df_filtrado.apply(encontrar_imagenes_producto, axis=1)
 
 # Convert to json
 json_data = df_filtrado.to_json(orient='records', force_ascii=False)
