@@ -2,10 +2,10 @@ import pandas as pd
 import json
 
 # Read the data in xlsx file
-df = pd.read_excel('')
+df = pd.read_excel('excel.xlsx')
 
 # Select just the columns that we need
-campos_deseados = ['CATEGORÍA', 'SUBCATEGORÍA', 'PRODUCTO', 'TEXTO ARGUMENTOS DE VALOR', 'CARACTERÍSTICAS']
+campos_deseados = ['CATEGORÍA', 'SUBCATEGORIA', 'PRODUCTO', 'TEXTO ARGUMENTOS DE VALOR', 'CARACTERISTICAS']
 df_filtrado = df[campos_deseados]
 
 # Convert to json
