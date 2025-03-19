@@ -16,3 +16,5 @@ json_pretty = json.dumps(json_formatted, indent=4, ensure_ascii=False)
 # Save the json to a file
 with open('datos_productos.json', 'w', encoding='utf-8') as f:
     f.write(json_pretty)
+    
+print('Conversion completa. Los datos se guardaron con exito padrino')
