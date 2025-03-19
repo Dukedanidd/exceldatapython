@@ -32,9 +32,28 @@ subcategorias_agricola = [
     'MANEJO DE MATERIAL'
 ]
 
+# Lista de subcategorías que pertenecen a PAVIMENTACION
+subcategorias_pavimentacion = [
+    'FRESADORAS',
+    'RECICLAJE',
+    'TRITURADORAS',
+    'EXTENDEDORAS',
+    'COMPACTADORES',
+    'RODILLOS TÁNDEM',
+    'RODILLOS NEUMÁTICO'
+]
+
+# Lista de subcategorías que pertenecen a PLANTAS DE ASFALTO
+subcategorias_plantas_asfalto = [
+    'PLANTAS DE ASFALTO MÓVILES',
+    'PLANTA DE ASFALTO ESTACIONARIA'
+]
+
 # Asignar categorías donde corresponda
 df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_muevetierras), 'CATEGORÍA'] = 'MUEVETIERRAS'
 df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_agricola), 'CATEGORÍA'] = 'AGRICOLA'
+df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_pavimentacion), 'CATEGORÍA'] = 'PAVIMENTACION'
+df_filtrado.loc[df_filtrado['SUBCATEGORIA'].isin(subcategorias_plantas_asfalto), 'CATEGORÍA'] = 'PLANTAS DE ASFALTO'
 
 # Convert to json
 json_data = df_filtrado.to_json(orient='records', force_ascii=False)
